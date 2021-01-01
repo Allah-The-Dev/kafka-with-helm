@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-with-helm-config
+data:
+  kafka_url: kafka-service
+  zookeeper_url: zookeeper-service
