@@ -1,10 +1,15 @@
-######################## step-1 : exec into kafka client pod ##################################
+######################## step-1 : exec into kafka client pod #################################
 kubectl exec -it <kafka-cient-pod> -- bash
+cd bin
 
-######################## step-1 : create a topic ##################################
-kafka-topics.sh --zookeeper zookeeper-service:2181 --topic messages --create --partitions 1 --replication-factor 1
+######################## step-2 : create a topic #############################################
+./kafka-topics.sh --zookeeper zookeeper-service:2181 --topic messages --create --partitions 1 --replication-factor 1
 
-######################## step-1 : test if topic got created ##################################
-kafka-topics.sh --zookeeper zookeeper-service:2181 --list
+######################## step-3 : test if topic got created ##################################
+./kafka-topics.sh --zookeeper zookeeper-service:2181 --list
 
-kafka-console-consumer.sh --bootstrap-server kafka-demo:9092 --topic messages --from-beginning
+######################## step-4 : kafka consumer to read message on topic ###################
+./kafka-console-consumer.sh --bootstrap-server kafka-service:9092 --topic messages --from-beginning
+
+######################## step-4 : kafka producer ###################
+./kafka-console-producer.sh --broker-list kafka-service:9092 --topic messages
