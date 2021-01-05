@@ -5,6 +5,9 @@ cd bin
 ------------------------ step-2 : create a topic ---------------------------------------------
 ./kafka-topics.sh --zookeeper zookeeper-service:2181 --topic messages --create --partitions 1 --replication-factor 1
 
+------------------------ step-2 : describe a topic ---------------------------------------------
+./kafka-topics.sh --zookeeper zookeeper-service:2181 --topic messages --describe
+
 ------------------------ step-3 : test if topic got created ----------------------------------
 ./kafka-topics.sh --zookeeper zookeeper-service:2181 --list
 
@@ -13,3 +16,14 @@ cd bin
 
 ------------------------ step-5 : kafka producer --------------------------------------------
 ./kafka-console-producer.sh --broker-list kafka-service:9092 --topic messages
+./kafka-console-producer.sh --broker-list kafka-service:9092 --topic messages --producer-property acks=all
+
+## producer which sends message to non-existent topic (this will give warning)
+## kafka will create that topic with default config i.e. partition-count 1 and replication-factor of 1
+## so always create a topic before using it
+
+## to change default partitions value, modify value of nun.partition in server.properties
+
+------------------------ step-5 : kafka consumer group --------------------------------------------
+## --group do not work in new kafka API
+./kafka-console-consumer.sh --bootstrap-server kafka-service:9092 --topic messages --consumer-property group.id=my-app-1
