@@ -1,0 +1,2 @@
+# ---------------------------List brokers and topics in cluster
+docker run -it --network=host edenhill/kafkacat:1.6.0 -b YOUR_BROKER -L

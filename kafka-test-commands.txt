@@ -24,6 +24,6 @@ cd bin
 
 ## to change default partitions value, modify value of nun.partition in server.properties
 
------------------------- step-5 : kafka consumer group --------------------------------------------
+------------------------ step-6 : kafka consumer group --------------------------------------------
 ## --group do not work in new kafka API
 ./kafka-console-consumer.sh --bootstrap-server kafka-service:9092 --topic messages --consumer-property group.id=my-app-1
