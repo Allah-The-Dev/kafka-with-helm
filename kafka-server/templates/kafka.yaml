@@ -23,6 +23,9 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 9092
+          name: internal
+        - containerPort: 9093
+          name: external
         env:
         - name: KAFKA_BROKER_ID
           value: "1"
@@ -35,14 +38,20 @@ spec:
             configMapKeyRef:
               name: kafka-with-helm-config
               key: zookeeper_url
-        - name: KAFKA_LISTENERS
-          value: "PLAINTEXT://:9092" 
+        - name: KAFKA_CFG_ADVERTISED_HOST_NAME
+          value: "172.18.104.183"
+        - name: KAFKA_CFG_LISTENERS
+          value: "CLIENT://:9092,EXTERNAL://0.0.0.0:9093" 
+        - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+          value: CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
         - name: MY_POD_IP
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        - name: KAFKA_ADVERTISED_LISTENERS        
-          value: "PLAINTEXT://$(MY_POD_IP):9092"
+        - name: KAFKA_CFG_ADVERTISED_LISTENERS        
+          value: "CLIENT://kafka:9092,EXTERNAL://172.18.104.183:9093"
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: client
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
         - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
@@ -53,9 +62,17 @@ kind: Service
 metadata:
   name: kafka-service
 spec:
+  type: NodePort
   selector:
     app: kafka
   ports:
-    - protocol: TCP
-      port: 9092
-      targetPort: 9092
+    - name: internal
+      protocol: TCP
+      port: 31001
+      nodePort: 31001
+      targetPort: internal
+    - name: external
+      protocol: TCP
+      port: 31000
+      nodePort: 31000
+      targetPort: external
