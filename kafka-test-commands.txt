@@ -3,7 +3,7 @@ kubectl exec -it <kafka-cient-pod> -- bash
 cd bin
 
 ------------------------ step-2 : create a topic ---------------------------------------------
-./kafka-topics.sh --zookeeper zookeeper-service:2181 --topic messages --create --partitions 1 --replication-factor 1
+./kafka-topics.sh --zookeeper zookeeper-service:2181 --topic messages --create --partitions 3 --replication-factor 1
 
 ------------------------ step-2 : describe a topic ---------------------------------------------
 ./kafka-topics.sh --zookeeper zookeeper-service:2181 --topic messages --describe
@@ -27,3 +27,17 @@ cd bin
 ------------------------ step-6 : kafka consumer group --------------------------------------------
 ## --group do not work in new kafka API
 ./kafka-console-consumer.sh --bootstrap-server kafka-service:9092 --topic messages --consumer-property group.id=my-app-1
+
+## show kafka consumer group --list do not work in new kafka API
+./kafka-consumer-groups.sh --bootstrap-server kafka-service:9092 --list
+
+## describe a consumer group
+./kafka-consumer-groups.sh --bootstrap-server kafka-service:9092 --describe --group my-app-1
+
+## reset kafka consumer group offset to the first message on group
+./kafka-consumer-groups.sh --bootstrap-server kafka-service:9092 --group my-app-1 \
+    --reset-offsets --to-earliest --execute --topic messages
+
+## reset kafka consumer group offset to the latest message on group
+./kafka-consumer-groups.sh --bootstrap-server learning_kafka_1:9092 --group my-app-1 \
+    --reset-offsets --to-latest --execute --topic messages
