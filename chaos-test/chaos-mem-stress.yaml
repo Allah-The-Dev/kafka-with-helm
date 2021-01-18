@@ -1,0 +1,19 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: stress-memory
+  namespace: chaos-mesh
+spec:
+  mode: all
+  selector:
+    labelSelectors:
+      app: kafka
+    namespaces:
+    - kafka
+  stressors:
+    memory: 
+      workers: 5
+      size: 90%
+  duration: "10s"
+  scheduler:
+    cron: "@every 2m"
