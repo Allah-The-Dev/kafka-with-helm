@@ -1,0 +1,25 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: chaos-kafka-zookeeper
+  namespace: kafka
+  labels: null
+  annotations: null
+spec:
+  selector:
+    namespaces:
+      - kafka
+    labelSelectors:
+      app: kafka
+    podPhaseSelectors:
+      - 'Running'
+  scheduler:
+    cron: '@every 30s'
+  delay:
+    latency: "10ms"
+  duration: "30s"
+  action: pod-kill
+  mode: fixed
+  value: '2'
+  containerName: ''
+  gracePeriod: 0
