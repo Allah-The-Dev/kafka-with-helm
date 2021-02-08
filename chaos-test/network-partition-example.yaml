@@ -1,0 +1,28 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: network-partition-example
+  namespace: kafka
+  labels: null
+  annotations: null
+spec:
+  action: partition
+  mode: fixed
+  value: '3'
+  selector:
+    namespaces:
+      - kafka
+    labelSelectors:
+      app: zookeeper
+  duration: 10s
+  scheduler:
+    cron: '@every 15s'
+  direction: to
+  target:
+    selector:
+      namespaces:
+        - kafka
+      labelSelectors:
+        app: zookeeper
+    mode: fixed
+    value: '3'

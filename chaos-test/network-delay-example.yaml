@@ -1,0 +1,20 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: network-delay-example
+  namespace: kafka
+spec:
+  action: delay
+  mode: all
+  selector:
+    namespaces:
+      - kafka
+    labelSelectors:
+      app: zookeeper
+  delay:
+    latency: "30s"
+    correlation: "25"
+    jitter: "90ms"
+  duration: "15m"
+  scheduler:
+    cron: "@every 20m"
